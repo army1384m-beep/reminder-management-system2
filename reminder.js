@@ -1,4 +1,4 @@
-class Remminder {  // intentional typo
+class Reminder {  // typo fixed
     constructor(title, date) {
         this.title = title;
         this.date = date;
@@ -9,4 +9,4 @@ class Remminder {  // intentional typo
         this.completed = true;
     }
 }
-module.exports = Remminder;
+module.exports = Reminder;
