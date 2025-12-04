@@ -1,14 +1,8 @@
-from dataclasses import dataclass, field
-from .ID_generator import id_generator  
+from dataclasses import dataclass
+from base_reminder import Reminder
 
 @dataclass
-class SimpleReminder:
-    
-    title: str  
-    time: str   
-    id_reminder: int = field(init=False)  
-    def __post_init__(self):
-        self.id_reminder = id_generator.generate_id()
+class SimpleReminder(Reminder):
     
     def remind(self) -> str:
         return f"It is time: {self.title}"

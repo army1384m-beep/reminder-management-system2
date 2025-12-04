@@ -1,19 +1,13 @@
 from dataclasses import dataclass, field
-from .ID_generator import id_generator
+from base_reminder import Reminder
 
 @dataclass
-class DailyRoutineReminder:
-    title: str  
-    time: str   
-    daily_repeat: bool = True 
-    id_reminder: int = field(init=False)  
-    
-    def __post_init__(self):
-        self.id_reminder = id_generator.generate_id()
+class DailyRoutineReminder(Reminder):
+    daily_repeat: bool = True
     
     def remind(self) -> str:
-        status = "Active daily repetition" if self.daily_repeat else "Daily repeat deactivate"
-        return f"{self.title} ){status}( :Daily Routine Reminder"
+        status ="Active daily repetition" if self.daily_repeat else "Daily repeat disabled"
+        return f"{self.title} ){status}( :Routine Daily"
     
-    def __str__(self) -> str:
+    def __str__(self):
         return f"DailyRoutineReminder: {self.title}"

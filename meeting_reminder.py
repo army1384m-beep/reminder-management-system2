@@ -1,22 +1,14 @@
 from dataclasses import dataclass, field
-from .ID_generator import id_generator
 from typing import List
+from base_reminder import Reminder
 
 @dataclass
-class MeetingReminder:
-
-    
-    title: str  
-    time: str  
-    participants: List[str] = field(default_factory=list)  
-    id_reminder: int = field(init=False) 
-    
-    def __post_init__(self):
-        self.id_reminder = id_generator.generate_id()
+class MeetingReminder(Reminder):
+    participants: List[str] = field(default_factory=list)
     
     def remind(self) -> str:
         people = "، ".join(self.participants)
-        return f"{self.title} → people : {people} :Meeting Reminder"
+        return f"{self.title} → people : {people} :Reminder Meeting"
     
-    def __str__(self) -> str:
+    def __str__(self):
         return f"MeetingReminder: {self.title}"

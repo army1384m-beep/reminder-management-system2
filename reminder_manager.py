@@ -1,4 +1,5 @@
 import logging
+import re
 import datetime
 
 class ReminderManager:
@@ -9,7 +10,7 @@ class ReminderManager:
     
     def _setup_logger(self):
         self.logger = logging.getLogger('reminder_system')
-        self.logger.setLevel(logging.DEBUG)  
+        self.logger.setLevel(logging.DEBUG)
         
         if self.logger.handlers:
             return
@@ -27,10 +28,13 @@ class ReminderManager:
             datefmt='%Y-%m-%d %H:%M:%S'
         )
         file_handler.setFormatter(file_format)
-        self.logger.addHandler(file_handler)  
+        self.logger.addHandler(file_handler)
+    
+    def _validate_time_format(self, time_str: str) -> bool:
+        pattern = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'
+        return bool(re.match(pattern, time_str))
     
     def add_reminder(self, reminder):
-
         if not reminder.title or reminder.title.strip() == "":
             self.logger.error("Add reminder failed: empty title")
             return False
@@ -39,13 +43,16 @@ class ReminderManager:
             self.logger.error("Add reminder failed: empty time")
             return False
         
+        if not self._validate_time_format(reminder.time.strip()):
+            self.logger.error(f"Add reminder failed: invalid time format '{reminder.time}'. Use HH:MM")
+            return False
+        
         self.reminders[reminder.id_reminder] = reminder
         self.logger.info(f"Reminder added - ID: {reminder.id_reminder}")
         return True
     
     def remove_reminder(self, reminder_id):
         if reminder_id in self.reminders:
-            reminder = self.reminders[reminder_id]
             del self.reminders[reminder_id]
             self.logger.warning(f"Reminder deleted - ID: {reminder_id}")
             return True
@@ -74,7 +81,7 @@ class ReminderManager:
                 results.append(result)
                 self.logger.info(f"Reminder executed - ID: {reminder_id}")
             except Exception as e:
-                error_msg =f"Error executing reminder {reminder_id}: {str(e)}"
+                error_msg = f"Error executing reminder {reminder_id}: {str(e)}"
                 results.append(error_msg)
                 self.logger.error(error_msg)
         
